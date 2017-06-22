@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./jcrop-demo/jcrop/css/Jcrop.css">
+  <style>
+    .jcrop-thumb {
+      top: 15px;
+      right: -20px;
+      border: 1px black solid;
+    }
+
+    #c {
+      position: absolute;
+      top: 500px;
+      right: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <img src="./jcrop-demo/imgs/02.jpg" id="target" />
+  </div>
+
+  <button id="mybutton">设置选区</button>
+
+  <form action="" id="myform">
+    <input type="hidden" name="cropx" id="cropx" value="0" />
+    <input type="hidden" name="cropy" id="cropy" value="0" />
+    <input type="hidden" name="cropw" id="cropw" value="0" />
+    <input type="hidden" name="croph" id="croph" value="0" />
+  </form>
+
+  <div id="c"></div>
+
+  <script src="../jquery.js"></script>
+  <script src="./jcrop-demo/jcrop/js/Jcrop.js"></script>
+  <script>
+    $(function () {
+      var jcrop_api;
+
+      $('#target').Jcrop({
+        // 设置默认选区
+        setSelect: [100, 100, 200, 200],
+        // 设置宽高比
+        aspectRatio: 2,
+        // bgColor: 'pink'，
+        minSize: [100, 50],
+        maxSize: [400, 200]
+      }, function () {
+        jcrop_api = this;
+        this.initComponent('Thumbnailer', { width: 240, height: 120, thumb: '#c' });
+      });
+
+      // 通过按钮设置选择区
+      $('#mybutton').on('click', function (e) {
+        if (jcrop_api) {
+          jcrop_api.setSelect([10, 10, 100, 100]);
+        }
+      });
+
+      // cropstart cropmove cropend 都是插件的事件
+      // 注意： 事件需要给 img标签的父容器绑定才会生效！！！
+      $('#container').on('cropstart cropmove cropend', function (e, s, c) {
+        $('#cropx').val(c.x);
+        $('#cropy').val(c.y);
+        $('#cropw').val(c.w);
+        $('#croph').val(c.h);
+      });
+
+    });
+  </script>
+</body>
+
+</html>
